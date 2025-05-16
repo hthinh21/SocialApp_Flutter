@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_project/models/mongodb.dart';
 import 'screens/login_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await MongoDatabase.connect();
   runApp(const DHKPTSocialApp());
 }
 
