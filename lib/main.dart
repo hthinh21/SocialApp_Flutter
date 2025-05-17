@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_project/models/mongodb.dart';
-import 'screens/login_screen.dart';
+import 'package:mobile_project/screens/home_screen.dart'; // import màn hình bạn vừa tạo
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await MongoDatabase.connect();
-  runApp(const DHKPTSocialApp());
+void main() {
+  runApp(const MyApp());
 }
 
-class DHKPTSocialApp extends StatelessWidget {
-  const DHKPTSocialApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DHKPTSocial',
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      home: const LoginScreen(),
-      debugShowCheckedModeBanner: false,
+      title: 'Social App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const HomePage(),
     );
   }
 }
