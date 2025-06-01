@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> users = [];
 
   @override
@@ -20,14 +20,14 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('http://192.168.16.2:1324/users'),
+    Uri.parse('https://dhkptsocial.onrender.com/users'),
     headers: {"Content-Type": "application/json"},
   );
 
   if (response.statusCode == 200) {
     final jsonResponse = json.decode(response.body);
     setState(() {
-      users = jsonResponse['data'];  // lấy danh sách users ở đây
+      users = jsonResponse['data'];  
     });
   } else {
     print("Lỗi khi gọi API: ${response.statusCode}");

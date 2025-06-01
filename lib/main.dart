@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_project/screens/home_screen.dart'; // import màn hình bạn vừa tạo
+import 'package:mobile_project/screens/home_screen.dart';
+import 'package:mobile_project/screens/login_screen.dart'; // import màn hình bạn vừa tạo
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Social App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const HomePage(),
+      home: const LoginScreen(),
     );
   }
 }

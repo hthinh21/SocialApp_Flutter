@@ -1,5 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/custom_text.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,15 +13,71 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
   bool isLoading = false;
 
-  void _login() async {
-    setState(() => isLoading = true);
-    await Future.delayed(const Duration(seconds: 2)); // giả lập API
-    setState(() => isLoading = false);
-    // TODO: Gọi API backend tại đây
+  Future<void> _login() async {
+    final username = _username.text.trim();
+    final password = _password.text.trim();
+
+    if (username.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Chưa nhập đầy đủ thông tin')),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse('http://dhkptsocial.onrender.com/users/username/$username'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        if (data['status'] == 'Banned') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Tài khoản của bạn đã bị khóa')),
+          );
+        } else if (data['password'] != password) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Sai tài khoản hoặc mật khẩu')),
+          );
+        } else {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('customerId', data['_id']);
+        await prefs.setString('customerName', data['name']);
+      
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Đăng nhập thành công')),
+          );        
+        
+        if (!mounted) return;
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
+      } else {  
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Người dùng không tồn tại')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi kết nối: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -35,17 +95,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'Billabong', // giống font Instagram
+                  fontFamily: 'Billabong',
                 ),
               ),
               const SizedBox(height: 64),
               CustomTextField(
-                controller: _emailController,
-                hintText: 'Email',
+                controller: _username,
+                hintText: 'Tên đăng nhập',
               ),
               const SizedBox(height: 16),
               CustomTextField(
-                controller: _passwordController,
+                controller: _password,
                 hintText: 'Mật khẩu',
                 isPassword: true,
               ),
@@ -57,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.blueAccent,
+                    color: Colors.purple,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: isLoading
@@ -75,7 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Text('Chưa có tài khoản?'),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      // TODO: điều hướng sang trang đăng ký
+                    },
                     child: const Text(
                       ' Đăng ký',
                       style: TextStyle(fontWeight: FontWeight.bold),
