@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Social App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const LoginScreen(),
+      debugShowCheckedModeBanner: false,
+      home: const Homepage(),
     );
   }
 }

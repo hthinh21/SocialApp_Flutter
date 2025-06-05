@@ -1,55 +1,91 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:mobile_project/widgets/defaultwidget.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<Homepage> createState() => _MainpageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<dynamic> users = [];
+class _MainpageState extends State<Homepage> {
+  int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    fetchUsers();
-  }
-
-  Future<void> fetchUsers() async {
-  final response = await http.get(
-    Uri.parse('https://dhkptsocial.onrender.com/users'),
-    headers: {"Content-Type": "application/json"},
-  );
-
-  if (response.statusCode == 200) {
-    final jsonResponse = json.decode(response.body);
+  void _onItemTapped(int index) {
     setState(() {
-      users = jsonResponse['data'];  
+      _selectedIndex = index;
     });
-  } else {
-    print("Lỗi khi gọi API: ${response.statusCode}");
   }
-}
 
+  Widget _loadWidget(int index) {
+    var nameWidgets = "Home";
+    switch (index) {
+      case 0:
+        nameWidgets = "Home";
+        break;
+      case 1:
+        nameWidgets = "Search";
+        break;
+      case 2:
+        nameWidgets = "Chat";
+        break;
+      case 3:
+        nameWidgets = "Profile";
+        break;
+      default:
+        nameWidgets = "None";
+        break;
+    }
+    return DefaultWidget(title: nameWidgets);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Danh sách người dùng')),
-      
-      body: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-          
-          return ListTile(
-            title: Text(user['name']),
-            subtitle: Text(user['_id']),
-          );
-        },
+      appBar: AppBar(
+        title: const Text("Social App"),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              
+            },
+          ),
+        ],
+        
+        elevation: 0, // Remove shadow
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20), // Rounded corners at the bottom
+          ),
+        ),
+      ),
+      body: _loadWidget(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
       ),
     );
   }

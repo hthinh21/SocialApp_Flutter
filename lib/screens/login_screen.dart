@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/custom_text.dart';
 import 'home_screen.dart';
 
@@ -49,9 +49,9 @@ class _LoginScreenState extends State<LoginScreen> {
             const SnackBar(content: Text('Sai tài khoản hoặc mật khẩu')),
           );
         } else {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('customerId', data['_id']);
-        await prefs.setString('customerName', data['name']);
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
+        // await prefs.setString('customerId', data['_id']);
+        // await prefs.setString('customerName', data['name']);
       
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Đăng nhập thành công')),
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
         
         if (!mounted) return;
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const Homepage()),
           );
         }
       } else {  
