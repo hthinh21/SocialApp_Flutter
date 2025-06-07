@@ -140,14 +140,16 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 196, 108, 211),
         title: const Text(
           'Tìm kiếm',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 25,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
+          
         ),
         elevation: 0,
       ),

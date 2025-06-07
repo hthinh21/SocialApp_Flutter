@@ -60,8 +60,9 @@ class _ChatListPageState extends State<ChatListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Messenger", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color(0xFF7893FF),
+        title: const Text("Chat", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

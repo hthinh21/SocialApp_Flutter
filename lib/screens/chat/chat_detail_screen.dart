@@ -57,20 +57,28 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   }
 
   Future<void> fetchMessages() async {
-    final id = widget.contact['_id'];
-    final res1 = await http
-        .get(Uri.parse("$baseUrl/messages/${widget.currentUserId}/$id"));
-    final res2 = await http
-        .get(Uri.parse("$baseUrl/messages/$id/${widget.currentUserId}"));
+  final id = widget.contact['_id'];
 
-    if (res1.statusCode == 200 && res2.statusCode == 200) {
-      final combined = [...jsonDecode(res1.body), ...jsonDecode(res2.body)];
-      combined.sort((a, b) => DateTime.parse(a['timestamp'])
-          .compareTo(DateTime.parse(b['timestamp'])));
-      setState(() => messages = combined);
-      scrollToBottom();
-    }
+  final res1 = await http.get(Uri.parse("$baseUrl/messages/${widget.currentUserId}/$id"));
+  final res2 = await http.get(Uri.parse("$baseUrl/messages/$id/${widget.currentUserId}"));
+
+  if (res1.statusCode == 200 && res2.statusCode == 200) {
+    final combined = [
+      ...jsonDecode(res1.body),
+      ...jsonDecode(res2.body)
+    ].where((msg) =>
+      (msg['sender'] == widget.currentUserId && msg['receiver'] == widget.contact['_id']) ||
+      (msg['receiver'] == widget.currentUserId && msg['sender'] == widget.contact['_id'])
+    ).toList();
+
+    //sap xep thoi gian
+    combined.sort((a, b) => DateTime.parse(a['timestamp']).compareTo(DateTime.parse(b['timestamp'])));
+
+    setState(() => messages = combined);
+    scrollToBottom();  
   }
+}
+
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -98,6 +106,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     );
 
     socket.emit('sendMessage', msg);
+    setState(() {
+    messages.add(msg);
+  });
+    scrollToBottom();
+  
     controller.clear();
   }
 
@@ -112,7 +125,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60), // chiều cao mới
         child: AppBar(
-          backgroundColor: const Color(0xFF7893FF),
+          backgroundColor: const Color.fromARGB(255, 196, 108, 211),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -134,7 +147,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               const SizedBox(width: 12),
               Text(
                 contactName,
-                style: const TextStyle(fontSize: 20), // tăng size chữ nếu cần
+                style: const TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold), // tăng size chữ nếu cần
               ),
             ],
           ),
@@ -158,16 +171,43 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: isMe ? Colors.blue : Colors.grey.shade800,
+                      color: isMe ? Color.fromARGB(255, 196, 108, 211) : Colors.grey.shade300, // nền khác cho contact
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text(
-                      content,
-                      style: const TextStyle(color: Colors.white),
+                    child: Column(
+                      crossAxisAlignment:
+                          isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          content,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: isMe ? Colors.white : Colors.black, // màu chữ khác cho contact
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          msg['timestamp'] != null
+                              ? (() {
+                                  final dt = DateTime.tryParse(msg['timestamp']);
+                                  if (dt != null) {
+                                    final local = dt.toLocal();
+                                    final hour = local.hour.toString().padLeft(2, '0');
+                                    final minute = local.minute.toString().padLeft(2, '0');
+                                    return '$hour:$minute';
+                                  }
+                                  return '';
+                                })()
+                              : '',
+                          style: TextStyle(
+                            color: isMe ? Colors.white70 : Colors.black54, // màu giờ khác cho contact
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -176,7 +216,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 13),
-            color: const Color(0xFF7893FF),
+            color: const Color.fromARGB(255, 196, 108, 211),
             child: Row(
               children: [
                 Expanded(

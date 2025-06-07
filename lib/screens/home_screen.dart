@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_project/screens/chat/chat_screen.dart';
 import 'package:mobile_project/screens/search_screen.dart';
 import 'package:mobile_project/widgets/defaultwidget.dart';
+import 'package:mobile_project/screens/chat/chat_list_screen.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -29,7 +29,7 @@ class _MainpageState extends State<Homepage> {
         return const SearchPage();
        
       case 2:
-        return const MessagesPage();
+        return const ChatListPage();  
       case 3:
         nameWidgets = "Profile";
         break;
@@ -45,12 +45,13 @@ class _MainpageState extends State<Homepage> {
     return Scaffold(
       appBar: _selectedIndex == 0
           ? AppBar(
-              title: const Text("Social App"),
+              title: const Text("Social App", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
               centerTitle: true,
               backgroundColor: const Color.fromARGB(255, 196, 108, 211),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.notifications),
+                  color: Colors.white,
                   onPressed: () {},
                 ),
               ],
