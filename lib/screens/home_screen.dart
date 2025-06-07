@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screens/chat/chat_screen.dart';
+import 'package:mobile_project/screens/search_screen.dart';
 import 'package:mobile_project/widgets/defaultwidget.dart';
 
 class Homepage extends StatefulWidget {
@@ -24,11 +26,10 @@ class _MainpageState extends State<Homepage> {
         nameWidgets = "Home";
         break;
       case 1:
-        nameWidgets = "Search";
-        break;
+        return const SearchPage();
+       
       case 2:
-        nameWidgets = "Chat";
-        break;
+        return const MessagesPage();
       case 3:
         nameWidgets = "Profile";
         break;
