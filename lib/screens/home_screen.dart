@@ -43,26 +43,25 @@ class _MainpageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Social App"),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              
-            },
-          ),
-        ],
-        
-        elevation: 0, // Remove shadow
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(20), // Rounded corners at the bottom
-          ),
-        ),
-      ),
+      appBar: _selectedIndex == 0
+          ? AppBar(
+              title: const Text("Social App"),
+              centerTitle: true,
+              backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.notifications),
+                  onPressed: () {},
+                ),
+              ],
+              elevation: 0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+              ),
+            )
+          : null, 
       body: _loadWidget(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
