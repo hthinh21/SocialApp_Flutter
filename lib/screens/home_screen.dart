@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screens/create_post_screen.dart';
 import 'package:mobile_project/screens/profile_screen.dart';
 import 'package:mobile_project/screens/search_screen.dart';
 import 'package:mobile_project/widgets/defaultwidget.dart';
@@ -21,23 +22,20 @@ class _MainpageState extends State<Homepage> {
   }
 
   Widget _loadWidget(int index) {
-    var nameWidgets = "Home";
     switch (index) {
       case 0:
-        nameWidgets = "Home";
-        break;
+        return DefaultWidget(title: "Home");
       case 1:
         return const SearchPage();
-       
       case 2:
-        return const ChatListPage();  
+        return const CreatePostScreen();
       case 3:
+        return const ChatListPage();
+      case 4:
         return const ProfilePage();
       default:
-        nameWidgets = "None";
-        break;
+        return DefaultWidget(title: "None");
     }
-    return DefaultWidget(title: nameWidgets);
   }
 
   @override
@@ -73,6 +71,10 @@ class _MainpageState extends State<Homepage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.post_add_sharp),
+            label: 'Post',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
