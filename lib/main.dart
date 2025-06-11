@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screens/chat/chat_list_screen.dart';
 import 'package:mobile_project/screens/home_screen.dart';
-import 'package:mobile_project/screens/login_screen.dart'; // import màn hình bạn vừa tạo
+import 'package:mobile_project/screens/login_screen.dart';
+import 'package:mobile_project/screens/search_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +13,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(    
+    return MaterialApp(
+      title: 'Mobile Project',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: const Homepage(),
+      initialRoute: '/login', // Màn hình khởi đầu
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const Homepage(),
+        '/chat': (context) => const ChatListPage(),
+        '/search': (context) => const SearchPage(),
+      },
     );
   }
 }

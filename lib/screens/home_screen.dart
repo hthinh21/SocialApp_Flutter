@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_project/screens/profile_screen.dart';
 import 'package:mobile_project/screens/search_screen.dart';
 import 'package:mobile_project/widgets/defaultwidget.dart';
 import 'package:mobile_project/screens/chat/chat_list_screen.dart';
@@ -31,8 +32,7 @@ class _MainpageState extends State<Homepage> {
       case 2:
         return const ChatListPage();  
       case 3:
-        nameWidgets = "Profile";
-        break;
+        return const ProfilePage();
       default:
         nameWidgets = "None";
         break;
