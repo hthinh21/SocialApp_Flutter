@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mobile_project/screens/login_screen.dart';
+import 'package:mobile_project/utils/logout.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -99,10 +101,38 @@ class _ProfileScreenState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Trang cá nhân', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
-      backgroundColor: const Color.fromARGB(255, 196, 108, 211),
-      centerTitle: true,),
-      
+      appBar: AppBar(
+        title: const Text('Trang cá nhân', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Đăng xuất'),
+                  content: const Text('Bạn có chắc chắn muốn đăng xuất?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      child: const Text('Hủy'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(ctx).pop();
+                        await logout(context);
+                      },
+                      child: const Text('Đăng xuất', style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           await _fetchUser();

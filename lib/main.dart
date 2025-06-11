@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_project/screens/chat/chat_list_screen.dart';
 import 'package:mobile_project/screens/home_screen.dart';
 import 'package:mobile_project/screens/login_screen.dart';
+import 'package:mobile_project/screens/profile_screen.dart';
 import 'package:mobile_project/screens/search_screen.dart';
 
 void main() {
@@ -17,12 +18,13 @@ class MyApp extends StatelessWidget {
       title: 'Mobile Project',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login', // Màn hình khởi đầu
+      home:const LoginScreen(),
       routes: {
         '/login': (context) => const LoginScreen(),
         '/home': (context) => const Homepage(),
         '/chat': (context) => const ChatListPage(),
         '/search': (context) => const SearchPage(),
+        '/profile': (context) => const ProfilePage(),
       },
     );
   }
