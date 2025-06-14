@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_project/screens/chat/chat_detail_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ChatListPage extends StatefulWidget {
@@ -14,7 +15,8 @@ class ChatListPage extends StatefulWidget {
 
 class _ChatListPageState extends State<ChatListPage> {
   final String baseUrl = 'https://dhkptsocial.onrender.com';
-  final String currentUserId = '677f37cf08735676c5333cd4';
+  late SharedPreferences prefs;
+  late String currentUserId;
 
   List<dynamic> contacts = [];
   Map<String, dynamic> lastMessages = {};
@@ -23,9 +25,20 @@ class _ChatListPageState extends State<ChatListPage> {
   @override
   void initState() {
     super.initState();
-    fetchContacts();
+    loadCustomerId();
   }
 
+Future<void> loadCustomerId() async {
+  final prefs = await SharedPreferences.getInstance();
+  final id = prefs.getString('customerId');
+
+  if (id != null) {
+    setState(() {
+      currentUserId = id;
+    });
+    await fetchContacts(); 
+  }
+}
   Future<void> fetchContacts() async {
     final res = await http.get(Uri.parse("$baseUrl/users/mutual-follows?currentUserId=$currentUserId"));
     if (res.statusCode == 200) {
@@ -49,7 +62,7 @@ class _ChatListPageState extends State<ChatListPage> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ChatDetailPage(contact: contact, currentUserId: currentUserId),
+        builder: (_) => ChatDetailPage(contact: contact, currentUserId: currentUserId!),
       ),
     );
     setState(() => isLoading = false);
