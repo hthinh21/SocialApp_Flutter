@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:mobile_project/screens/other_user_profile_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class UserModel {
   final String id;
   final String name;
@@ -34,7 +35,8 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  final String customerId = '677f37cf08735676c5333cd4'; // Gán cứng _id test
+  String? customerId; // <-- Không dùng final ở đây
+
   final String baseUrl =
       'https://dhkptsocial.onrender.com'; // Dành cho AVD Android
   List<UserModel> randomUsers = [];
@@ -44,6 +46,14 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    _loadCustomerId();
+  }
+
+  Future<void> _loadCustomerId() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      customerId = prefs.getString('customerId');
+    });
     fetchSuggestions();
   }
 
@@ -101,7 +111,8 @@ class _SearchPageState extends State<SearchPage> {
           padding: const EdgeInsets.symmetric(vertical: 6),
           child: InkWell(
             onTap: () {
-              print("Xem chi tiết user: ${user.id}");
+              print("bam vao profile "+user.id);
+              Navigator.push(context, MaterialPageRoute(builder: (_) => OtherUserProfile(userId: user.id)));
             },
             child: Row(
               children: [

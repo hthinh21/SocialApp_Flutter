@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home_screen.dart';
-
+import 'package:mobile_project/screens/register_screen.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -95,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Billabong',
+                  color: Colors.purple,
                 ),
               ),
               const SizedBox(height: 64),
@@ -143,7 +144,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text('Chưa có tài khoản?'),
                   GestureDetector(
                     onTap: () {
-                      // TODO: Chuyển sang trang Đăng ký
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                      );
                     },
                     child: const Text(
                       ' Đăng ký',

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile_project/components/cardpost.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile_project/screens/login_screen.dart';
 import 'package:mobile_project/utils/logout.dart';
@@ -240,7 +241,30 @@ class _ProfileScreenState extends State<ProfilePage> {
         itemBuilder: (_, index) {
           final item = dataList[index];
           return GestureDetector(
-            onTap: () { /* handle post nav */ },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Scaffold(
+                    backgroundColor: Colors.white,
+                    appBar: AppBar(
+                      title: const Text('Chi tiết bài viết'),
+                      backgroundColor: Colors.purple,
+                    ),
+                    body: Center(
+                      child: SingleChildScrollView(
+                        child: PostCard(
+                          postID: item['_id'] ?? '',
+                          author: item['userID'] is Map ? item['userID']['_id'] ?? '' : item['userID'] ?? '',
+                          description: item['description'] ?? '',
+                          post: item,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
             child: Stack(
               children: [
                 Image.network(
