@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 100),
               const Text(
-                'DHKPTSocial',
+                'Đăng nhập',
                 style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,

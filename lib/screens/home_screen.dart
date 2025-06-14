@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screens/create_post_screen.dart';
+import 'package:mobile_project/screens/post_list_screen.dart';
 import 'package:mobile_project/screens/profile_screen.dart';
 import 'package:mobile_project/screens/search_screen.dart';
 import 'package:mobile_project/widgets/defaultwidget.dart';
@@ -24,7 +25,7 @@ class _MainpageState extends State<Homepage> {
   Widget _loadWidget(int index) {
     switch (index) {
       case 0:
-        return DefaultWidget(title: "Home");
+        return const PostListScreen();
       case 1:
         return const SearchPage();
       case 2:
@@ -43,7 +44,7 @@ class _MainpageState extends State<Homepage> {
     return Scaffold(
       appBar: _selectedIndex == 0
           ? AppBar(
-              title: const Text("Social App", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
+              title: const Text("Trang chủ", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
               centerTitle: true,
               backgroundColor: const Color.fromARGB(255, 196, 108, 211),
               actions: [
