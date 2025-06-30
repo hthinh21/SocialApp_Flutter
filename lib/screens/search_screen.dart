@@ -120,7 +120,7 @@ class _SearchPageState extends State<SearchPage> {
                   radius: 28,
                   backgroundImage: user.avatar.isNotEmpty
                       ? NetworkImage('$baseUrl/files/download/${user.avatar}')
-                      : const AssetImage('assets/naruto.png') as ImageProvider,
+                      : const AssetImage('assets/images/default.jpg') as ImageProvider,
                 ),
                 const SizedBox(width: 12),
                 Column(

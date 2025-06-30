@@ -98,8 +98,11 @@ class _PostCardState extends State<PostCard> {
           avaAuthor = data['avatar'];
           username = data['username'];
           authorID = data['_id'];
-        });
+        });       
       }
+      if (avaAuthor.isEmpty) {
+            avaAuthor = 'assets/images/default.jpg'; // Fallback image
+          }
     } catch (error) {
       print('Error fetching user: $error');
     }

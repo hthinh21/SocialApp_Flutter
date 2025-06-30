@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile_project/components/cardpost.dart';
 
 class OtherUserProfile extends StatefulWidget {
@@ -17,12 +17,55 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
   Map<String, dynamic>? user;
   List<dynamic> posts = [];
   bool loading = true;
+  bool isFollowing = false;
 
   @override
   void initState() {
     super.initState();
     fetchUserData();
     fetchUserPosts();
+    checkFollowing();
+  }
+
+  Future<String> getCurrentUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('customerId') ?? '';
+  }
+
+  Future<void> checkFollowing() async {
+    final currentUserId = await getCurrentUserId();
+    final res = await http.get(Uri.parse(
+        'https://dhkptsocial.onrender.com/users/is-following?from=$currentUserId&to=${widget.userId}'));
+
+    if (res.statusCode == 200) {
+      final result = json.decode(res.body);
+      setState(() {
+        isFollowing = result['isFollowing'];
+      });
+    }
+  }
+
+  Future<void> toggleFollow() async {
+    final currentUserId = await getCurrentUserId();
+    final url = isFollowing
+        ? 'https://dhkptsocial.onrender.com/users/unfollow'
+        : 'https://dhkptsocial.onrender.com/users/follow';
+
+    final res = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'from': currentUserId, 'to': widget.userId}),
+    );
+
+    if (res.statusCode == 200 && res.statusCode == 201) {
+      setState(() {
+        isFollowing = !isFollowing;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lỗi khi thao tác theo dõi')),
+      );
+    }
   }
 
   Future<void> fetchUserData() async {
@@ -81,7 +124,14 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
           const SizedBox(height: 10),
           Text(user!['name'] ?? '', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           Text(user!['description'] ?? '', style: const TextStyle(fontSize: 16)),
-
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: toggleFollow,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isFollowing ? Colors.grey : Colors.purple,
+            ),
+            child: Text(isFollowing ? 'Hủy theo dõi' : 'Theo dõi'),
+          ),
           const SizedBox(height: 20),
           const Divider(),
           const Text('Bài viết', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
