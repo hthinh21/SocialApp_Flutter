@@ -100,12 +100,11 @@ class _PostCardState extends State<PostCard> {
           authorID = data['_id'];
         });       
       }
-      if (avaAuthor.isEmpty) {
-            avaAuthor = 'assets/images/default.jpg'; // Fallback image
-          }
+      
     } catch (error) {
       print('Error fetching user: $error');
     }
+    
   }
 
   Future<void> fetchLike() async {
@@ -377,9 +376,12 @@ class _PostCardState extends State<PostCard> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://dhkptsocial.onrender.com/files/download/$avaAuthor',
-                      ),
+                      backgroundImage: avaAuthor.isEmpty
+                          ? const AssetImage('assets/images/default.jpg')
+                          : NetworkImage(
+                              'https://dhkptsocial.onrender.com/files/download/$avaAuthor',
+                            ),
+                      
                     ),
                     const SizedBox(width: 16),
                     Text(
@@ -414,7 +416,8 @@ class _PostCardState extends State<PostCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CircleAvatar(
-                            backgroundImage: NetworkImage(
+                            backgroundImage: 
+                            NetworkImage(
                               'https://dhkptsocial.onrender.com/files/download/${commentItem['userID']['avatar']}',
                             ),
                           ),
@@ -542,9 +545,11 @@ class _PostCardState extends State<PostCard> {
                     // Navigate to user profile
                   },
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      'https://dhkptsocial.onrender.com/files/download/$avaAuthor',
-                    ),
+                    backgroundImage: avaAuthor.isEmpty
+                        ? const AssetImage('assets/images/default.jpg')
+                        : NetworkImage(
+                            'https://dhkptsocial.onrender.com/files/download/$avaAuthor',
+                          ),
                   ),
                 ),
                 const SizedBox(width: 12),
