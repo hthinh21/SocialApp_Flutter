@@ -67,6 +67,11 @@ class _ProfileScreenState extends State<ProfilePage> {
           final imgList = jsonDecode(imgRes.body) as List;
           temp.add({
             'id': art['_id'],
+            'userID': art['userID'],
+            'description': art['description'] ?? '',  
+            'numberOfLike': art['numberOfLike'] ?? 0,
+            'numberOfComment': art['numberOfComment'] ?? 0,
+            'publishDate': art['publishDate'] ?? '',
             'image': imgList.isNotEmpty ? imgList[0]['_id'] : null,
             'likes': art['numberOfLike'],
             'comments': art['numberOfComment'],
@@ -254,8 +259,8 @@ class _ProfileScreenState extends State<ProfilePage> {
                     body: Center(
                       child: SingleChildScrollView(
                         child: PostCard(
-                          postID: item['_id'] ?? '',
-                          author: item['userID'] is Map ? item['userID']['_id'] ?? '' : item['userID'] ?? '',
+                          postID: item['id'] ?? '',
+                          author: item['userID'] ?? '',
                           description: item['description'] ?? '',
                           post: item,
                         ),
