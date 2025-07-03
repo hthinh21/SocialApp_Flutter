@@ -416,10 +416,11 @@ class _PostCardState extends State<PostCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CircleAvatar(
-                            backgroundImage: 
-                            NetworkImage(
-                              'https://dhkptsocial.onrender.com/files/download/${commentItem['userID']['avatar']}',
-                            ),
+                            backgroundImage: commentItem['userID']['avatar'] == null
+                                ? const AssetImage('assets/images/default.jpg')
+                                : NetworkImage(
+                                    'https://dhkptsocial.onrender.com/files/download/${commentItem['userID']['avatar']}',
+                                  ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
