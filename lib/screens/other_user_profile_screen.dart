@@ -74,6 +74,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
     if (response.statusCode == 200) {
       setState(() {
         user = json.decode(response.body);
+        // print(user);
         loading = false;
       });
     } else {
@@ -117,7 +118,9 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
           const SizedBox(height: 10),
           CircleAvatar(
             radius: 50,
-            backgroundImage: NetworkImage(
+            backgroundImage: user!['avatar'] == null
+            ? const AssetImage('assets/images/default.jpg')
+            : NetworkImage(
               'https://dhkptsocial.onrender.com/files/download/${user!['avatar']}',
             ),
           ),
