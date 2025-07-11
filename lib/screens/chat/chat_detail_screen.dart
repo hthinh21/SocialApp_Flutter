@@ -142,7 +142,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 backgroundImage: hasAvatar
                     ? NetworkImage(
                         "$baseUrl/files/download/${widget.contact['avatar']}")
-                    : const AssetImage("assets/image.png") as ImageProvider,
+                    : const AssetImage("assets/images/default.jpg") as ImageProvider,
               ),
               const SizedBox(width: 12),
               Text(

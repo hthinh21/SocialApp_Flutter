@@ -90,7 +90,7 @@ Future<void> loadCustomerId() async {
                     radius: 30,
                     backgroundImage: contact['avatar'] != null && contact['avatar'].toString().isNotEmpty
                         ? NetworkImage("$baseUrl/files/download/${contact['avatar']}")
-                        : const AssetImage("assets/image.png") as ImageProvider,
+                        : const AssetImage('assets/images/default.jpg') as ImageProvider,
                   ),
                   title: Text(contact['name'], style: const TextStyle(color: Colors.black, fontSize: 20)),
                   subtitle: Text(

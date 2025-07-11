@@ -53,6 +53,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
         const SnackBar(content: Text('Lỗi khi thao tác theo dõi')),
       );
     }
+    await fetchUserData(); // Cập nhật lại dữ liệu người dùng sau khi theo dõi
   }
 
   Future<void> fetchUserData() async {
@@ -103,79 +104,142 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
 
     return Scaffold(
       appBar: AppBar(title: Text(user!['username'] ?? '')),
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: user!['avatar'] == null
-            ? const AssetImage('assets/images/default.jpg')
-            : NetworkImage(
-              'https://dhkptsocial.onrender.com/files/download/${user!['avatar']}',
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(user!['name'] ?? '', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          Text(user!['description'] ?? '', style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: toggleFollow,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isFollowing ? Colors.red : Colors.blue,
-            ),
-            child: Text(isFollowing ? 'Hủy theo dõi' : 'Theo dõi',
-              style: const TextStyle(color: Colors.black, fontSize: 16),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Divider(),
-          const Text('Bài viết', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: posts.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 4,
-                mainAxisSpacing: 4,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await fetchUserData();
+          await fetchUserPosts();
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: user!['avatar'] == null
+                    ? const AssetImage('assets/images/default.jpg')
+                    : NetworkImage('https://dhkptsocial.onrender.com/files/download/${user!['avatar']}'),
               ),
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Scaffold(
-                          backgroundColor: Colors.white,
-                          appBar: AppBar(
-                            title: const Text('Chi tiết bài viết'),
-                            backgroundColor: Colors.purple,
-                          ),
-                          body: Center(
-                            child: SingleChildScrollView(
-                              child: PostCard(
-                                postID: post['_id'] ?? '',
-                                author: post['userID'] is Map ? post['userID']['_id'] ?? '' : post['userID'] ?? '',
-                                description: post['description'] ?? '',
-                                post: post,
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: toggleFollow,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isFollowing ? Colors.red : Colors.blue,
+                ),
+                child: Text(
+                  isFollowing ? 'Hủy theo dõi' : 'Theo dõi',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(user!['username'] ?? '', style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(user!['name'] ?? ''),
+              Text(user!['description'] ?? ''),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(children: [
+                    Text(posts.length.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const Text('Bài viết'),
+                  ]),
+                  const SizedBox(width: 16),
+                  InkWell(
+                    onTap: () => _showUsersModal(context, 'Người theo dõi', followers),
+                    child: Column(children: [
+                      Text(followers.length.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const Text('Người theo dõi'),
+                    ]),
+                  ),
+                  const SizedBox(width: 16),
+                  InkWell(
+                    onTap: () => _showUsersModal(context, 'Đang theo dõi', followings),
+                    child: Column(children: [
+                      Text(followings.length.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const Text('Đang theo dõi'),
+                    ]),
+                  ),
+                ],
+              ),
+              const Divider(height: 32),
+              const Text('Bài viết', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: posts.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, crossAxisSpacing: 2, mainAxisSpacing: 2),
+                  itemBuilder: (context, index) {
+                    final post = posts[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Scaffold(
+                              backgroundColor: Colors.white,
+                              appBar: AppBar(
+                                title: const Text('Chi tiết bài viết'),
+                                backgroundColor: Colors.purple,
+                              ),
+                              body: Center(
+                                child: SingleChildScrollView(
+                                  child: PostCard(
+                                    postID: post['_id'] ?? '',
+                                    author: post['userID'] is Map ? post['userID']['_id'] ?? '' : post['userID'] ?? '',
+                                    description: post['description'] ?? '',
+                                    post: post,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        );
+                      },
+                      child: Image.network(
+                        'https://dhkptsocial.onrender.com/files/download/${post['image']}',
+                        fit: BoxFit.cover,
                       ),
                     );
                   },
-                  child: Image.network(
-                    'https://dhkptsocial.onrender.com/files/download/${post['image']}',
-                    fit: BoxFit.cover,
-                  ),
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
+  }
+
+  
+  void _showUsersModal(BuildContext ctx, String title, List list) {
+    showDialog(
+      context: ctx,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 300,
+          child: ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (_, i) {
+              final u = list[i];
+              return ListTile(
+                leading: 
+                CircleAvatar(
+                  backgroundImage: u['avatar'] == null
+                      ? const AssetImage('assets/images/default.jpg')
+                      : NetworkImage('https://dhkptsocial.onrender.com/files/download/${u['avatar']}'),
+                ),
+                title: Text(u['username'] ?? ''),
+              );
+            },
+          ),
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Đóng'))],
+      ));
   }
 }

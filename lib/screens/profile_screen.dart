@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_project/components/cardpost.dart';
+import 'package:mobile_project/screens/other_user_profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile_project/screens/login_screen.dart';
 import 'package:mobile_project/utils/logout.dart';
@@ -155,10 +156,9 @@ class _ProfileScreenState extends State<ProfilePage> {
               const SizedBox(height: 16),
               CircleAvatar(
                 radius: 50,
-                backgroundImage: user?['avatar'] != null
-                  ? NetworkImage('https://dhkptsocial.onrender.com/files/download/${user!['avatar']}')
-                  : null,
-                child: user?['avatar'] == null ? const Icon(Icons.person, size: 50) : null,
+                backgroundImage: user?['avatar'] == null
+                    ? const AssetImage('assets/images/default.jpg')
+                    : NetworkImage('https://dhkptsocial.onrender.com/files/download/${user!['avatar']}'),
               ),
               const SizedBox(height: 8),
               Text(user?['username'] ?? '', style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
@@ -174,14 +174,14 @@ class _ProfileScreenState extends State<ProfilePage> {
                   ]),
                   const SizedBox(width: 16),
                   InkWell(
-                    onTap: () => _showUsersModal(context, 'Followers', followers),
+                    onTap: () => _showUsersModal(context, 'Người theo dõi', followers),
                     child: Column(children: [
                       Text(_formatNumber(followers.length)), const Text('Người theo dõi'),
                     ]),
                   ),
                   const SizedBox(width: 16),
                   InkWell(
-                    onTap: () => _showUsersModal(context, 'Following', followings),
+                    onTap: () => _showUsersModal(context, 'Đang theo dõi', followings),
                     child: Column(children: [
                       Text(_formatNumber(followings.length)), const Text('Đang theo dõi'),
                     ]),
@@ -324,9 +324,17 @@ class _ProfileScreenState extends State<ProfilePage> {
             itemBuilder: (_, i) {
               final u = list[i];
               return ListTile(
-                leading: u['avatar'] != null
-                  ? CircleAvatar(backgroundImage: NetworkImage('https://dhkptsocial.onrender.com/files/download/${u['avatar']}'))
-                  : const CircleAvatar(child: Icon(Icons.person)),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OtherUserProfile(userId: u['_id']),
+                  ),
+                ),
+                leading: CircleAvatar(
+                  backgroundImage: u['avatar'] == null
+                      ? const AssetImage('assets/images/default.jpg')
+                      : NetworkImage('https://dhkptsocial.onrender.com/files/download/${u['avatar']}'),
+                ),
                 title: Text(u['username'] ?? ''),
               );
             },

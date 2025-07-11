@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile_project/screens/other_user_profile_screen.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
@@ -93,6 +94,7 @@ class _PostCardState extends State<PostCard> {
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        
         setState(() {
           author = data['name'];
           avaAuthor = data['avatar'];
@@ -100,6 +102,7 @@ class _PostCardState extends State<PostCard> {
           authorID = data['_id'];
         });       
       }
+      
       
     } catch (error) {
       print('Error fetching user: $error');
@@ -543,7 +546,12 @@ class _PostCardState extends State<PostCard> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    // Navigate to user profile
+                    print('authorID: $authorID');
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => OtherUserProfile(userId: authorID),
+                      ),
+                    );
                   },
                   child: CircleAvatar(
                     backgroundImage: avaAuthor.isEmpty
