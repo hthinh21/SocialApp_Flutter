@@ -16,6 +16,8 @@ class OtherUserProfile extends StatefulWidget {
 class _OtherUserProfileState extends State<OtherUserProfile> {
   Map<String, dynamic>? user;
   List<dynamic> posts = [];
+  List<dynamic> followers = [];
+  List<dynamic> followings = [];
   bool loading = true;
   bool isFollowing = false;
 
@@ -24,7 +26,6 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
     super.initState();
     fetchUserData();
     fetchUserPosts();
-    checkFollowing();
   }
 
   Future<String> getCurrentUserId() async {
@@ -32,35 +33,21 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
     return prefs.getString('customerId') ?? '';
   }
 
-  Future<void> checkFollowing() async {
-    final currentUserId = await getCurrentUserId();
-    final res = await http.get(Uri.parse(
-        'https://dhkptsocial.onrender.com/users/is-following?from=$currentUserId&to=${widget.userId}'));
-
-    if (res.statusCode == 200) {
-      final result = json.decode(res.body);
-      setState(() {
-        isFollowing = result['isFollowing'];
-      });
-    }
-  }
-
   Future<void> toggleFollow() async {
     final currentUserId = await getCurrentUserId();
-    final url = isFollowing
-        ? 'https://dhkptsocial.onrender.com/users/unfollow'
-        : 'https://dhkptsocial.onrender.com/users/follow';
+    final url = 'https://dhkptsocial.onrender.com/users/follow/${widget.userId}';
 
     final res = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'from': currentUserId, 'to': widget.userId}),
+      body: jsonEncode({'loggedInUserId': currentUserId}),
     );
 
-    if (res.statusCode == 200 && res.statusCode == 201) {
+    if (res.statusCode == 200 ) {
+      
       setState(() {
         isFollowing = !isFollowing;
-      });
+      });    
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lỗi khi thao tác theo dõi')),
@@ -71,10 +58,13 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
   Future<void> fetchUserData() async {
     final url = 'https://dhkptsocial.onrender.com/users/${widget.userId}';
     final response = await http.get(Uri.parse(url));
+    final currentUserId = await getCurrentUserId();
     if (response.statusCode == 200) {
       setState(() {
         user = json.decode(response.body);
-        // print(user);
+        followers = user?['followers'] ?? [];
+        followings = user?['followings'] ?? [];
+        isFollowing = followers.map((e) => e['_id']).contains(currentUserId);
         loading = false;
       });
     } else {
@@ -131,9 +121,11 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
           ElevatedButton(
             onPressed: toggleFollow,
             style: ElevatedButton.styleFrom(
-              backgroundColor: isFollowing ? Colors.grey : Colors.purple,
+              backgroundColor: isFollowing ? Colors.red : Colors.blue,
             ),
-            child: Text(isFollowing ? 'Hủy theo dõi' : 'Theo dõi'),
+            child: Text(isFollowing ? 'Hủy theo dõi' : 'Theo dõi',
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
           ),
           const SizedBox(height: 20),
           const Divider(),
