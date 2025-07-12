@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_project/screens/other_user_profile_screen.dart';
+import 'package:mobile_project/screens/profile_screen.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
@@ -26,7 +27,6 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  // State variables
   String author = '';
   String avaAuthor = '';
   String authorID = '';
@@ -545,10 +545,19 @@ class _PostCardState extends State<PostCard> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    print('authorID: $authorID');
-                    Navigator.of(context).push(
+                  onTap: () async {
+                    final refs = await SharedPreferences.getInstance();
+                    final currentUserId = refs.getString('customerId') ?? '';
+                    (authorID == currentUserId)
+                    // ignore: use_build_context_synchronously
+                    ? Navigator.of(context).push(
                       MaterialPageRoute(
+                        builder: (context) => ProfilePage(),
+                      ),
+                    )
+                    // ignore: use_build_context_synchronously
+                    : Navigator.of(context).push(
+                        MaterialPageRoute(
                         builder: (context) => OtherUserProfile(userId: authorID),
                       ),
                     );
