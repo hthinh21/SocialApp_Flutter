@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_project/screens/create_post_screen.dart';
+import 'package:mobile_project/screens/notification_screen.dart';
 import 'package:mobile_project/screens/post_list_screen.dart';
 import 'package:mobile_project/screens/profile_screen.dart';
 import 'package:mobile_project/screens/search_screen.dart';
@@ -51,7 +52,11 @@ class _MainpageState extends State<Homepage> {
                 IconButton(
                   icon: const Icon(Icons.notifications),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => NotificationScreen(),
+                    )); 
+                  },  
                 ),
               ],
               elevation: 0,
