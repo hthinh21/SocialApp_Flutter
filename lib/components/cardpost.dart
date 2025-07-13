@@ -28,6 +28,7 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   String currentUserId = '';
+  String currentUserName ='';
   String author = '';
   String avaAuthor = '';
   String authorID = '';
@@ -93,6 +94,7 @@ class _PostCardState extends State<PostCard> {
   Future<void> fetchCurrentUser() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() => currentUserId = prefs.getString('customerId') ?? '');
+    setState(() => currentUserName = prefs.getString('customerName') ?? '');
   }
 
   Future<void> fetchUser(String userID) async {
@@ -272,13 +274,9 @@ class _PostCardState extends State<PostCard> {
     } catch (error) {
       print('Error deleting post: $error');
     }
-    fetchPost();
   }
 
   Future<void> handleReportPost() async {
-  final prefs = await SharedPreferences.getInstance();
-  final userID = prefs.getString('customerId') ?? '';
-
   if (reportDetails.length > 200) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Mô tả báo cáo có độ dài bé hơn 200 ký tự')),
@@ -289,7 +287,7 @@ class _PostCardState extends State<PostCard> {
   try {
     // Kiểm tra đã báo cáo chưa
     final checkRes = await http.get(
-      Uri.parse('https://dhkptsocial.onrender.com/reports/$userID/$postID'),
+      Uri.parse('https://dhkptsocial.onrender.com/reports/$currentUserId/$postID'),
     );
     if (checkRes.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -302,7 +300,7 @@ class _PostCardState extends State<PostCard> {
     // Nếu chưa báo cáo thì tiếp tục báo cáo
     final data = {
       'postID': postID,
-      'userID': userID,
+      'userID': currentUserId,
       'reportDetails': reportDetails,
       'reportType': 'article',
     };
@@ -716,17 +714,23 @@ class _PostCardState extends State<PostCard> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: const Text('Báo cáo bài đăng'),
+                  title: const Text('Báo cáo', style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red,fontSize: 25),textAlign: TextAlign.center),
+                  // title: const Text("UserId của bạn: $currentUserId"),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Text("Báo cáo bài viết của: \n$author",style:const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),textAlign: TextAlign.center),  
+                      const SizedBox(height: 16),
                       TextField(
+                        controller: TextEditingController(
+                          
+                        ),
                         decoration: const InputDecoration(
                           labelText: 'Nội dung báo cáo',
                           hintText: 'Nhập nội dung báo cáo...',
                           border: OutlineInputBorder(),
                         ),
-                        maxLines: 5,
+                        maxLines: 3,
                         onChanged: (value) {
                           reportDetails = value;
                         },
@@ -754,7 +758,6 @@ class _PostCardState extends State<PostCard> {
               },
             );
           });
-        }
                         }
 
                       }
