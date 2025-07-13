@@ -27,6 +27,7 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  String currentUserId = '';
   String author = '';
   String avaAuthor = '';
   String authorID = '';
@@ -45,7 +46,8 @@ class _PostCardState extends State<PostCard> {
   String deleteCommentID = '';
   String reportCommentID = '';
   bool isHideDescription = false;
-  
+
+
   // Controllers
   TextEditingController commentController = TextEditingController();
   TextEditingController reportController = TextEditingController();
@@ -55,11 +57,12 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     super.initState();
     initializeData();
+    fetchCurrentUser();
   }
 
   Future<void> initializeData() async {
     await fetchVideos(widget.postID);
-    await fetchUser(widget.author);
+    await fetchUser(widget.author); 
     setState(() {
       descriptionPost = widget.description;
       postID = widget.postID;
@@ -87,6 +90,11 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
+  Future<void> fetchCurrentUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() => currentUserId = prefs.getString('customerId') ?? '');
+  }
+
   Future<void> fetchUser(String userID) async {
     try {
       final response = await http.get(
@@ -102,8 +110,7 @@ class _PostCardState extends State<PostCard> {
           authorID = data['_id'];
         });       
       }
-      
-      
+     
     } catch (error) {
       print('Error fetching user: $error');
     }
@@ -247,6 +254,78 @@ class _PostCardState extends State<PostCard> {
       print('Error fetching post: $error');
     }
   }
+  Future<void> handleDeletePost() async {
+    try {
+      final response = await http.delete(
+        Uri.parse('https://dhkptsocial.onrender.com/articles/$postID'),
+      );
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Bài viết đã được xóa')),
+        );
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Lỗi khi xóa bài viết')),
+        );
+      }
+    } catch (error) {
+      print('Error deleting post: $error');
+    }
+    fetchPost();
+  }
+
+  Future<void> handleReportPost() async {
+  final prefs = await SharedPreferences.getInstance();
+  final userID = prefs.getString('customerId') ?? '';
+
+  if (reportDetails.length > 200) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Mô tả báo cáo có độ dài bé hơn 200 ký tự')),
+    );
+    return;
+  }
+
+  try {
+    // Kiểm tra đã báo cáo chưa
+    final checkRes = await http.get(
+      Uri.parse('https://dhkptsocial.onrender.com/reports/$userID/$postID'),
+    );
+    if (checkRes.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Bài đăng đã được báo cáo')),
+      );
+      Navigator.of(context).pop(); // Đóng dialog báo cáo nếu có
+      return;
+    }
+  } catch (e) {
+    // Nếu chưa báo cáo thì tiếp tục báo cáo
+    final data = {
+      'postID': postID,
+      'userID': userID,
+      'reportDetails': reportDetails,
+      'reportType': 'article',
+    };
+    final reportRes = await http.post(
+      Uri.parse('https://dhkptsocial.onrender.com/reports/'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data),
+    );
+    if (reportRes.statusCode == 200 || reportRes.statusCode == 201) {
+      // Đổi trạng thái bài viết thành "reported"
+      final newStatus = {'articleStatus': 'reported'};
+      await http.put(
+        Uri.parse('https://dhkptsocial.onrender.com/articles/$postID'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(newStatus),
+      );
+      Navigator.of(context).pop(); // Đóng dialog báo cáo nếu có
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Báo cáo bài đăng thành công')),
+      );
+    }
+  }
+}
 
   Future<void> handleComment() async {
     if (comment.isEmpty) {
@@ -316,6 +395,7 @@ class _PostCardState extends State<PostCard> {
     } catch (error) {
       print('Error commenting: $error');
     }
+    fetchComment(postID);
   }
 
   String calculateTimeDifference(String? publishDate) {
@@ -521,8 +601,8 @@ class _PostCardState extends State<PostCard> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context)  {
+    return Container( 
       width: 320,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
@@ -605,20 +685,85 @@ class _PostCardState extends State<PostCard> {
                   color: Colors.black,
                   itemBuilder: (context) => [
                     PopupMenuItem(
-                      child: const Text(
-                        'Báo cáo',
-                        style: TextStyle(color: Colors.red),
-                      ),
+                      child: authorID == currentUserId
+                          ? const Text('Xóa bài viết',style:TextStyle(color: Colors.white))
+                          : const Text('Báo cáo bài viết',style:TextStyle(color: Colors.white)),
                       onTap: () {
-                        // Handle report
+                        if(authorID == currentUserId){
+                          showDialog(context: context, builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Xóa bài viết'),
+                              content: const Text('Bạn có chắc chắn muốn xóa bài viết này không?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Hủy'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    handleDeletePost();
+                                  },
+                                  child: const Text('Xóa'),
+                                ),
+                              ],
+                            );
+                          });
+                        } else{
+                          Future.delayed(Duration.zero, () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Báo cáo bài đăng'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Nội dung báo cáo',
+                          hintText: 'Nhập nội dung báo cáo...',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: 5,
+                        onChanged: (value) {
+                          reportDetails = value;
+                        },
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        reportDetails = '';
                       },
+                      child: const Text('Hủy'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await handleReportPost();
+                        Navigator.of(context).pop();
+                        reportDetails = '';
+                      },
+                      child: const Text('Lưu báo cáo'),
+                    ),
+                  ],
+                );
+              },
+            );
+          });
+        }
+                        }
+
+                      }
                     ),
                   ],
                 ),
               ],
             ),
-          ),
-          
+          ),       
           // Media carousel
           if (files.isNotEmpty)
             SizedBox(
@@ -724,7 +869,7 @@ class _PostCardState extends State<PostCard> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '$author ',
+                        text: '$author',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
