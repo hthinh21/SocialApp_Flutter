@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PostListScreen extends StatefulWidget {
-  const PostListScreen({Key? key}) : super(key: key);
+  const PostListScreen({super.key});
   @override
   _PostListScreenState createState() => _PostListScreenState();
 }
@@ -29,7 +29,9 @@ class _PostListScreenState extends State<PostListScreen> {
   }
 
   Future<Map<String, dynamic>> fetchUserById(String id) async {
-    final res = await http.get(Uri.parse('https://dhkptsocial.onrender.com/users/$id'));
+    final res = await http.get(
+      Uri.parse('https://dhkptsocial.onrender.com/users/$id'),
+    );
     if (res.statusCode == 200) {
       return jsonDecode(res.body);
     }
@@ -49,13 +51,19 @@ class _PostListScreenState extends State<PostListScreen> {
     }
 
     try {
-      final resFollow = await http.get(Uri.parse('https://dhkptsocial.onrender.com/users/$userID'));
+      final resFollow = await http.get(
+        Uri.parse('https://dhkptsocial.onrender.com/users/$userID'),
+      );
       final data = json.decode(resFollow.body);
       List followers = data['followings'];
       List postList = [];
 
       for (var follower in followers) {
-        final resArticle = await http.get(Uri.parse('https://dhkptsocial.onrender.com/articles/${follower["_id"]}'));
+        final resArticle = await http.get(
+          Uri.parse(
+            'https://dhkptsocial.onrender.com/articles/${follower["_id"]}',
+          ),
+        );
         final articleData = json.decode(resArticle.body);
 
         for (var post in articleData['data']) {
@@ -93,11 +101,12 @@ class _PostListScreenState extends State<PostListScreen> {
       loadNewest = false;
       loadOldest = false;
       loadFilter = true;
-      filterPost = defaultPost.where((post) {
-        if (post['publishDate'] == null) return false;
-        String postDate = post['publishDate'].split("T")[0];
-        return postDate == date;
-      }).toList();
+      filterPost =
+          defaultPost.where((post) {
+            if (post['publishDate'] == null) return false;
+            String postDate = post['publishDate'].split("T")[0];
+            return postDate == date;
+          }).toList();
     });
   }
 
@@ -116,7 +125,6 @@ class _PostListScreenState extends State<PostListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Column(
         children: [
           Padding(
@@ -139,7 +147,9 @@ class _PostListScreenState extends State<PostListScreen> {
                         lastDate: DateTime(2100),
                       );
                       if (picked != null) {
-                        String formatted = DateFormat('yyyy-MM-dd').format(picked);
+                        String formatted = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(picked);
                         handleFilter(formatted);
                       }
                     },
@@ -156,10 +166,17 @@ class _PostListScreenState extends State<PostListScreen> {
                       selectedDate = '';
                     });
                   },
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(value: 'Đăng gần đây', child: Text('Đăng gần đây')),
-                    const PopupMenuItem(value: 'Đăng đã lâu', child: Text('Đăng đã lâu')),
-                  ],
+                  itemBuilder:
+                      (context) => [
+                        const PopupMenuItem(
+                          value: 'Đăng gần đây',
+                          child: Text('Đăng gần đây'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'Đăng đã lâu',
+                          child: Text('Đăng đã lâu'),
+                        ),
+                      ],
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
@@ -169,30 +186,46 @@ class _PostListScreenState extends State<PostListScreen> {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
           Expanded(
-            child: loadingPost
-                ? const Center(child: CircularProgressIndicator())
-                : loadNewest
-                    ? ListView(children: sortPostsByDate(defaultPost).map(buildPostItem).toList())
+            child:
+                loadingPost
+                    ? const Center(child: CircularProgressIndicator())
+                    : loadNewest
+                    ? ListView(
+                      children:
+                          sortPostsByDate(
+                            defaultPost,
+                          ).map(buildPostItem).toList(),
+                    )
                     : loadOldest
-                        ? ListView(children: sortPostsByDate(defaultPost, ascending: true).map(buildPostItem).toList())
-                        : loadFilter
-                            ? filterPost.isEmpty
-                                ? const Center(child: Text('Không có kết quả nào được tìm thấy'))
-                                : ListView(children: filterPost.map(buildPostItem).toList())
-                            : postIDs.isEmpty
-                                ? const Center(
-                                    child: Text(
-                                      'Bạn chưa theo dõi người dùng nào cả',
-                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                    ),
-                                  )
-                                : ListView(children: postIDs.map(buildPostItem).toList()),
-          )
+                    ? ListView(
+                      children:
+                          sortPostsByDate(
+                            defaultPost,
+                            ascending: true,
+                          ).map(buildPostItem).toList(),
+                    )
+                    : loadFilter
+                    ? filterPost.isEmpty
+                        ? const Center(
+                          child: Text('Không có kết quả nào được tìm thấy'),
+                        )
+                        : ListView(
+                          children: filterPost.map(buildPostItem).toList(),
+                        )
+                    : postIDs.isEmpty
+                    ? const Center(
+                      child: Text(
+                        'Bạn chưa theo dõi người dùng nào cả',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    )
+                    : ListView(children: postIDs.map(buildPostItem).toList()),
+          ),
         ],
       ),
     );
