@@ -160,9 +160,13 @@ class _SearchPageState extends State<SearchPage> {
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
-          
         ),
         elevation: 0,
+        shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+              ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(

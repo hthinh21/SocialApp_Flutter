@@ -72,23 +72,23 @@ class _MainpageState extends State<Homepage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Trang chủ',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Search',
+            label: 'Tìm kiếm',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.post_add_sharp),
-            label: 'Post',
+            label: 'Tạo bài viết',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Chat',
+            label: 'Tin nhắn',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Hồ sơ',
           ),
         ],
         currentIndex: _selectedIndex,

@@ -73,9 +73,14 @@ Future<void> loadCustomerId() async {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Chat", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text("Tin nhắn", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+        shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+              ),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
