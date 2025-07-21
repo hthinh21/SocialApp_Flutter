@@ -83,7 +83,7 @@ void _handleNotifyUser(String userId) {
       appBar: AppBar(
         title: const Text('Thông báo', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+        backgroundColor: const Color.fromRGBO(123, 31, 162, 1),
       ),
       body: filteredNotifyList.isEmpty
           ? Center(
@@ -91,7 +91,7 @@ void _handleNotifyUser(String userId) {
                 margin: const EdgeInsets.all(16),
                 padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 196, 108, 211),
+                  color: const Color.fromRGBO(123, 31, 162, 1),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8)],
                 ),
@@ -119,7 +119,7 @@ void _handleNotifyUser(String userId) {
                       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 196, 108, 211),
+                        color: const Color.fromRGBO(123, 31, 162, 1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: InkWell(

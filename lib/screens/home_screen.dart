@@ -34,7 +34,7 @@ class _MainpageState extends State<Homepage> {
       case 3:
         return const ChatListPage();
       case 4:
-        return const ProfilePage();
+        return const ProfileScreen();
       default:
         return DefaultWidget(title: "None");
     }
@@ -47,7 +47,7 @@ class _MainpageState extends State<Homepage> {
           ? AppBar(
               title: const Text("Trang chủ", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
               centerTitle: true,
-              backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+              backgroundColor: const Color.fromRGBO(123, 31, 162, 1),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.notifications),

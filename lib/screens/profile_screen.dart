@@ -2,19 +2,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_project/components/cardpost.dart';
+import 'package:mobile_project/screens/edit_profile_sreen.dart';
 import 'package:mobile_project/screens/other_user_profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile_project/screens/login_screen.dart';
 import 'package:mobile_project/utils/logout.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfilePage> {
+class _ProfileScreenState extends State<ProfileScreen> {
   String? customerId;
   Map<String, dynamic>? user;
   List<dynamic> followers = [];
@@ -110,7 +111,7 @@ class _ProfileScreenState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Trang cá nhân', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+        backgroundColor: const Color.fromRGBO(123, 31, 162, 1),
         centerTitle: true,
         actions: [
           IconButton(
@@ -164,6 +165,24 @@ class _ProfileScreenState extends State<ProfilePage> {
                 backgroundImage: user?['avatar'] == null
                     ? const AssetImage('assets/images/default.jpg')
                     : NetworkImage('https://dhkptsocial.onrender.com/files/download/${user!['avatar']}'),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfileScreen(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                child: const Text(
+                  'Chỉnh sửa trang cá nhân',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
               ),
               const SizedBox(height: 8),
               Text(user?['username'] ?? '', style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),

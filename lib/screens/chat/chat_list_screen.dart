@@ -75,7 +75,7 @@ Future<void> loadCustomerId() async {
       appBar: AppBar(
         title: const Text("Tin nhắn", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+        backgroundColor: const Color.fromRGBO(123, 31, 162, 1),
         shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(20),

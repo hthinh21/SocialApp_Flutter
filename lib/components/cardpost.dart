@@ -631,7 +631,7 @@ class _PostCardState extends State<PostCard> {
                     // ignore: use_build_context_synchronously
                     ? Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => ProfilePage(),
+                        builder: (context) => ProfileScreen(),
                       ),
                     )
                     // ignore: use_build_context_synchronously

@@ -152,7 +152,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+        backgroundColor: const Color.fromRGBO(123, 31, 162, 1),
         title: const Text(
           'Tìm kiếm',
           style: TextStyle(
@@ -216,7 +216,7 @@ class _SearchPageState extends State<SearchPage> {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white)),
+                        color: Colors.black)),
                 const SizedBox(height: 8),
                 searchResults.isNotEmpty
                     ? buildUserList(searchResults)
