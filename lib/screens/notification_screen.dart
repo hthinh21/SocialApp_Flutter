@@ -112,50 +112,60 @@ void _handleNotifyUser(String userId) {
                 final actionDetail = notification['actionDetail'] ?? '';
                 final userId = actor['_id'];
 
-                return Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 196, 108, 211),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      if(notification['actionDetail'].contains('theo dõi')) {  
-                        _handleNotifyUser(userId);
-                      } else {
-                        _handleNotifyArticle(notification['article']);
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: (avatar != null && avatar.toString().isNotEmpty)
-                              ? NetworkImage('https://dhkptsocial.onrender.com/files/download/${actor!['avatar']}')
-                              : const AssetImage('assets/images/default.jpg') as ImageProvider,
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: '$name',
-                                  style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
-                                ),
-                                TextSpan(
-                                  text: ' $actionDetail',
-                                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                                ),
-                              ],
+                return Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 196, 108, 211),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          if(notification['actionDetail'].contains('theo dõi')) {  
+                            _handleNotifyUser(userId);
+                          } else {
+                            _handleNotifyArticle(notification['article']);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage: (avatar != null && avatar.toString().isNotEmpty)
+                                  ? NetworkImage('https://dhkptsocial.onrender.com/files/download/${actor!['avatar']}')
+                                  : const AssetImage('assets/images/default.jpg') as ImageProvider,
                             ),
-                          ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: '$name',
+                                      style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: ' $actionDetail',
+                                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                    const Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                      indent: 25,
+                      endIndent: 25,
+                    ),
+                  ],
                 );
               },
             ),

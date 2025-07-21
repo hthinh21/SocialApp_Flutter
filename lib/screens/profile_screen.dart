@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfilePage> {
               Text(user?['username'] ?? '', style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Text(user?['name'] ?? ''),
-              Text(user?['description'] ?? ''),
+              
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

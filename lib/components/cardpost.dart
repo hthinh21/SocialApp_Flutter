@@ -393,7 +393,7 @@ class _PostCardState extends State<PostCard> {
     } catch (error) {
       print('Error commenting: $error');
     }
-    fetchComment(postID);
+    
   }
 
   String calculateTimeDifference(String? publishDate) {
@@ -470,6 +470,7 @@ class _PostCardState extends State<PostCard> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 17,
                       ),
                     ),
                     const Spacer(),
@@ -872,7 +873,7 @@ class _PostCardState extends State<PostCard> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: '$author',
+                        text: '$author ',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
