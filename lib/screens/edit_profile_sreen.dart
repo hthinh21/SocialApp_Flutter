@@ -134,7 +134,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(123, 31, 162, 1), // purple
+      appBar: AppBar(
+        title: const Text('Chỉnh sửa hồ sơ', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white )),
+        backgroundColor: Color.fromRGBO(123, 31, 162, 1),
+        centerTitle: true,
+      ),
+      
+      backgroundColor: const Color.fromARGB(255, 213, 184, 225), // purple
       body: Center(
         child: Container(
           margin: const EdgeInsets.all(16),
