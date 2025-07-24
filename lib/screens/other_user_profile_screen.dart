@@ -228,6 +228,12 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
             itemBuilder: (_, i) {
               final u = list[i];
               return ListTile(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OtherUserProfile(userId: u['_id']),
+                  ),
+                ),
                 leading: 
                 CircleAvatar(
                   backgroundImage: u['avatar'] == null
