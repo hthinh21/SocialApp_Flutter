@@ -277,7 +277,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   builder: (context) => Scaffold(
                     backgroundColor: Colors.white,
                     appBar: AppBar(
-                      title: const Text('Chi tiết bài viết'),
+                      title: const Text('Chi tiết bài viết',
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
                       backgroundColor: Colors.purple,
                     ),
                     body: Center(

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobile_project/components/cardpost.dart';
-
+import 'package:mobile_project/screens/profile_screen.dart';
 class OtherUserProfile extends StatefulWidget {
   final String userId;
 
@@ -135,7 +135,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
               Text(user!['username'] ?? '', style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Text(user!['name'] ?? ''),
-              Text(user!['description'] ?? ''),
+              
               const SizedBox(height: 12),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -182,7 +182,8 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                             builder: (context) => Scaffold(
                               backgroundColor: Colors.white,
                               appBar: AppBar(
-                                title: const Text('Chi tiết bài viết'),
+                                title: const Text('Chi tiết bài viết',
+                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
                                 backgroundColor: Colors.purple,
                               ),
                               body: Center(
@@ -215,7 +216,9 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
   }
 
   
-  void _showUsersModal(BuildContext ctx, String title, List list) {
+  void _showUsersModal(BuildContext ctx, String title, List list) async {
+    final prefs = await SharedPreferences.getInstance();
+    final currentUserId = prefs.getString('customerId') ?? '';
     showDialog(
       context: ctx,
       builder: (_) => AlertDialog(
@@ -228,12 +231,14 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
             itemBuilder: (_, i) {
               final u = list[i];
               return ListTile(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OtherUserProfile(userId: u['_id']),
-                  ),
-                ),
+                onTap: u['_id'] == currentUserId
+                    ? () => Navigator.push(ctx, MaterialPageRoute(builder: (context) => const ProfileScreen()))
+                    : () => Navigator.push(
+                        ctx,
+                        MaterialPageRoute(
+                          builder: (context) => OtherUserProfile(userId: u['_id']),
+                        ),
+                      ),               
                 leading: 
                 CircleAvatar(
                   backgroundImage: u['avatar'] == null
