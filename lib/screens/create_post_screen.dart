@@ -175,34 +175,38 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),    
               ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            if (_mediaFiles.isNotEmpty) _buildMediaPreview(),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _pickMedia,
-              child: const Text('Thêm hình ảnh và video'),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _descriptionController,
-              maxLength: 200,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: 'Mô tả bài viết',
-                border: OutlineInputBorder(),
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_mediaFiles.isNotEmpty) _buildMediaPreview(),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: _pickMedia,
+                child: const Text('Thêm hình ảnh và video'),
               ),
-            ),
-            const SizedBox(height: 20),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _uploadPost,
-                    child: const Text('Đăng tải'),
-                  ),
-          ],
+              const SizedBox(height: 10),
+              TextField(
+                controller: _descriptionController,
+                maxLength: 200,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Mô tả bài viết',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _uploadPost,
+                      child: const Text('Đăng tải'),
+                    ),
+            ],
+          ),
         ),
       ),
     );
