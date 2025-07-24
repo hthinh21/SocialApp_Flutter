@@ -602,8 +602,8 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context)  {
     return Container( 
-      width: 320,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      width: 350,
+      margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.circular(12),

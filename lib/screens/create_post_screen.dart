@@ -177,7 +177,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       ),
       body: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,

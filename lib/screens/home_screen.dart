@@ -68,7 +68,10 @@ class _MainpageState extends State<Homepage> {
             )
           : null, 
       body: _loadWidget(_selectedIndex),
+      
       bottomNavigationBar: BottomNavigationBar(
+        type:BottomNavigationBarType.fixed,
+        backgroundColor: const Color.fromRGBO(123, 31, 162, 1),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -93,7 +96,7 @@ class _MainpageState extends State<Homepage> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: const Color.fromRGBO(255, 255, 255, 1),
         onTap: _onItemTapped,
       ),
     );
