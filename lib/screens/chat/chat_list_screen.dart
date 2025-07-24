@@ -88,25 +88,37 @@ Future<void> loadCustomerId() async {
               itemCount: contacts.length,
               itemBuilder: (context, index) {
                 final contact = contacts[index];
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  onTap: () => openChat(context, contact),
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundImage: contact['avatar'] != null && contact['avatar'].toString().isNotEmpty
-                        ? NetworkImage("$baseUrl/files/download/${contact['avatar']}")
-                        : const AssetImage('assets/images/default.jpg') as ImageProvider,
-                  ),
-                  title: Text(contact['name'], style: const TextStyle(color: Colors.black, fontSize: 20)),
-                  subtitle: Text(
-                    lastMessages[contact['_id']]?['content'] ?? 'No messages yet',
-                    style: const TextStyle(color: Colors.grey),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                return Column(
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                      onTap: () => openChat(context, contact),
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: contact['avatar'] != null && contact['avatar'].toString().isNotEmpty
+                            ? NetworkImage("$baseUrl/files/download/${contact['avatar']}")
+                            : const AssetImage('assets/images/default.jpg') as ImageProvider,
+                      ),
+                      title: Text(contact['name'], style: const TextStyle(color: Colors.black, fontSize: 20)),
+                      subtitle: Text(
+                        lastMessages[contact['_id']]?['content'] ?? 'No messages yet',
+                        style: const TextStyle(color: Colors.grey),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.black,
+                      thickness: 1,
+                      indent: 25,
+                      endIndent: 25,
+                    ),
+                  ],
                 );
               },
             ),
+            
+            
     );
   }
 }

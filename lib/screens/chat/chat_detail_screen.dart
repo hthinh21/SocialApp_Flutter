@@ -125,7 +125,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60), // chiều cao mới
         child: AppBar(
-          backgroundColor: const Color.fromARGB(255, 196, 108, 211),
+          backgroundColor: const Color.fromRGBO(123, 31, 162, 1),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -174,7 +174,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: isMe ? Color.fromARGB(255, 196, 108, 211) : Colors.grey.shade300, // nền khác cho contact
+                      color: isMe ? const Color.fromRGBO(123, 31, 162, 1) : Colors.grey.shade300, // nền khác cho contact
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -216,7 +216,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 13),
-            color: const Color.fromARGB(255, 196, 108, 211),
+            color: const Color.fromRGBO(123, 31, 162, 1),
             child: Row(
               children: [
                 Expanded(
